@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Mali:wght@300&display=swap');
+
+
+section {
+    margin:0;
+    padding:0;
+    background-image: url('/assets/images/todo-bg.jpg');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    position: relative;
+    height: 100vh;
+}
+
+#task-li {
+    border: 1px #99bdd5 solid;
+    border-radius: 10px;
+}
+
+#task-li:hover {
+    border: 2px #99bdd5 solid;
+    font-weight: bolder;
+}
+
+section {
+    font-family: 'Mali', cursive;
+}
+
+.checked {
+    text-decoration: line-through;
+}
+
+#todo-div {
+    position: relative;
+    height: 85vh;
+}
+
+.todo-div {
+    position: absolute;
+    top:60%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform:translate(-50%,-50%);
+    -ms-transform:translate(-50%,-50%);
+}
+
+.todo-div-header {
+    height: 280px;
+    position: relative;
+    z-index: -1;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%);
+    -webkit-transform:translate(-50%);
+    -ms-transform:translate(-50%);
+}
+
+.todo-div h2 {
+    font-size: 50px;
+    margin: 0;
+}
+
+.taskNameInput {
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom: solid #99bdd5;
+    background: none;
+}

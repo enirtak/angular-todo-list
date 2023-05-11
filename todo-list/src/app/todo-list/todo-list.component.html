@@ -1,0 +1,147 @@
+<section>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container">
+          <a class="navbar-brand fw-bold me-auto">
+            <img src="../../assets/images/todo-list.svg" width="30" height="24" class="d-inline-block align-text-top">
+            TODO List
+          </a>
+          <button class="btn btn-danger btn-sm d-flex"
+            data-bs-toggle="modal"
+            data-bs-target="#confirmationModal"
+            *ngIf="todoList">
+                Reset List
+          </button>
+        </div>
+      </nav>
+    
+    <div class="container mt-2 pt-3">
+        <ng-template [ngIf]="showTodoListForm" [ngIfElse]="nameInputContainer">
+            <ng-container>
+                <div class="row justify-content-center mb-5">
+                    <div class="col-5">
+                        <h2 class="text-center mb-3">Hi, 
+                            <span class="fw-bold">{{nameInput}}</span>!
+                        </h2>
+                        <h4 class="text-center mb-5">Here is your TODO List</h4>
+                        <ng-container [formGroup]="todoListFormGroup">
+                            <div class="d-flex">
+                                <input type="hidden" 
+                                    formControlName="Id" />
+                                <input 
+                                    type="text" 
+                                    class="form-control taskNameInput" 
+                                    placeholder="Enter a Task" 
+                                    formControlName="TaskName" 
+                                    maxlength="500"/>
+                                <button 
+                                    class="btn btn-outline-primary mx-2" 
+                                    (click)="onAddTask()" 
+                                    [disabled]="todoListFormGroup.invalid">
+                                        <i [ngClass]="selectedTask?.taskName ?  'bi bi-check-lg' : 'bi bi-plus-circle'"></i>
+                                </button>
+                            </div>
+                            <field-error [control]="todoListFormGroup.controls['TaskName']"></field-error>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-5">
+                    <div class="col-5">
+                        <ul class="list-group list-group-flush w-100" *ngIf="todoList">
+                            <ng-container *ngFor="let task of todoList; let i = index;">
+                                <li class="list-group-item d-flex justify-content-between align-items-center mb-2" id="task-li">
+                                    <span class="ms-2 me-auto text-start">
+                                        <input 
+                                            type="checkbox" 
+                                            class="form-check-input" 
+                                            (change)="onCheckTask(i)"
+                                            [checked]="task.isCompleted">
+                                        <label 
+                                            class="form-check-label ms-3" 
+                                            [ngClass]="task?.isCompleted ? 'checked' : ''">
+                                                {{task.taskName}}
+                                        </label>
+                                    </span>
+                                    <button 
+                                        class="btn btn-sm btn-outline-success mx-1" 
+                                        (click)="onEditTask(i)" 
+                                        [disabled]="task.isEditing">
+                                            <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button 
+                                        class="btn btn-sm btn-outline-primary mx-1" 
+                                        (click)="onDeleteTask(i)" 
+                                        [disabled]="task.isEditing">
+                                            <i class="bi bi-trash3"></i>
+                                    </button>
+                                </li>
+                            </ng-container>
+                        </ul>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-template>
+        <ng-template #nameInputContainer>
+            <div class="row mb-5 justify-content-center align-items-center" id="todo-div">
+                <div class="col-5 text-center todo-div">
+                    <div class="todo-div-header">
+                        <ng-template [ngIf]="showInputNameField" [ngIfElse]="inputNameButton">
+                            <h2 class="border-bottom">Enter your name
+                                <button 
+                                    class="btn btn-sm btn-outline-success ms-2" 
+                                    (click)="onShowInputNameField()">
+                                        <i class="bi bi-pencil"></i>
+                                </button>
+                            </h2>
+                        </ng-template>
+                        <ng-template #inputNameButton>
+                            <div class="d-flex" [formGroup]="nameInputFormGroup">
+                                <input 
+                                    type="text" 
+                                    class="form-control taskNameInput" 
+                                    formControlName="Name"/>
+                                <button 
+                                    class="btn btn-outline-primary mx-2" 
+                                        (click)="onInputName()">
+                                        <i class="bi bi-check-circle"></i>
+                                </button>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Confirmation</h1>
+          <button 
+            type="button" 
+            class="btn-close" 
+            data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete your TODO List?</p>
+        </div>
+        <div class="modal-footer">
+            <button 
+                type="button"
+                class="btn btn-secondary" 
+                data-bs-dismiss="modal">
+                    NO
+            </button>
+            <button
+                type="button" 
+                class="btn btn-primary" 
+                data-bs-dismiss="modal" 
+                (click)="onResetList()">
+                    YES
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
