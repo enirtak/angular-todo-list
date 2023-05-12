@@ -75,7 +75,7 @@ export class TodoListComponent implements OnInit {
   }
 
   saveNameToLocalStorage() {
-    localStorage.setItem("todo-name", JSON.stringify(this.nameInput));
+    localStorage.setItem(this.todoNameConst, JSON.stringify(this.nameInput));
   }
 
   onAddTask() {
