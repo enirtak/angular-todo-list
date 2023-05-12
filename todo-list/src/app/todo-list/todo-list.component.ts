@@ -4,13 +4,18 @@ import { TodoList } from './TodoList';
 import { createNameInputFormGroup, createTodoListFormGroup } from './todo-list-formgroup.create';
 import { setFormValidation } from './todo-list-formgroup.handler';
 import { formValueToDTO } from './todo-list-formgroup.patchvalue';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'todo-list',
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css']
 })
+
 export class TodoListComponent implements OnInit {
+
+  todoListConst = environment.todoList;
+  todoNameConst = environment.todoName;
 
   todoListFormGroup!: FormGroup;
   nameInputFormGroup!: FormGroup;
@@ -37,11 +42,12 @@ export class TodoListComponent implements OnInit {
   }
 
   getTodoList() {
-    this.todoList = this.getLocalStorageValue("list");
+    let list = this.getLocalStorageValue(this.todoListConst);
+    this.todoList = list ? list : [];
   }
 
   getUserName() {
-    this.nameInput = this.getLocalStorageValue("todo-name");
+    this.nameInput = this.getLocalStorageValue(this.todoNameConst);
     if (this.nameInput) 
       this.showTodoListForm = true;
     else
@@ -54,18 +60,22 @@ export class TodoListComponent implements OnInit {
 
   onInputName() {
     this.onShowInputNameField();
-    
+
     this.nameInput = this.nameInputFormGroup.controls['Name'].value;
-    if (!this.nameInput) this.nameInput = "User";
+    this.nameInput = !this.nameInput ? "User" : this.nameInput;
 
     this.nameInputFormGroup.patchValue({ name: this.nameInput });
     this.showTodoListForm = !this.showTodoListForm;
 
-    localStorage.setItem("todo-name", JSON.stringify(this.nameInput));
+    this.saveNameToLocalStorage();
   }
 
-  saveToLocalStorage() {
-    localStorage.setItem("todo-list", JSON.stringify(this.todoList));
+  saveListToLocalStorage() {
+    localStorage.setItem(this.todoListConst, JSON.stringify(this.todoList));
+  }
+
+  saveNameToLocalStorage() {
+    localStorage.setItem("todo-name", JSON.stringify(this.nameInput));
   }
 
   onAddTask() {
@@ -79,7 +89,7 @@ export class TodoListComponent implements OnInit {
       this.todoList.push(values);
     }
 
-    this.saveToLocalStorage();
+    this.saveListToLocalStorage();
     this.todoListFormGroup.reset();
     this.selectedTask = undefined;
   }
@@ -90,22 +100,23 @@ export class TodoListComponent implements OnInit {
     this.selectedTask = this.todoList[id];
 
     this.todoListFormGroup.patchValue({TaskName: this.selectedTask.taskName});
-    this.saveToLocalStorage();
+    this.saveListToLocalStorage();
   }
 
   onDeleteTask(id: number) {
     this.todoList.splice(id, 1);
-    this.saveToLocalStorage();
+    this.saveListToLocalStorage();
   }
 
   onCheckTask(id: number) {
     this.todoList[id].isCompleted = !this.todoList[id].isCompleted;
-    this.saveToLocalStorage();
+    this.saveListToLocalStorage();
   }
 
   onResetList() {
-    this.todoList = [];
-    this.saveToLocalStorage();
+    localStorage.removeItem(this.todoListConst);
+    localStorage.removeItem(this.todoNameConst);
+    location.reload();
   }
 
   getLocalStorageValue(key: string) {
